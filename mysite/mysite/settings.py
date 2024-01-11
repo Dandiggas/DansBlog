@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-dpo7(gg8c3^^@+@fy!x_b!7ojlr7p@vt6%fx5*wzat&mp7l)%1"
+SECRET_KEY = '3ZvDO9Y01CaP5CdvLOe0Zgz9-GxOvv1izq3RjPMxsn4q6HlP0pM'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -130,3 +130,16 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Disable HSTS
+SECURE_HSTS_SECONDS = 0
+
+# Disable SSL redirection
+SECURE_SSL_REDIRECT = False
+
+# Disable secure-only session cookies
+SESSION_COOKIE_SECURE = False
+
+# Disable secure-only CSRF cookies
+CSRF_COOKIE_SECURE = False
