@@ -20,14 +20,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  
 
-      - name: Fetch EC2 SSH key from AWS Secret Manager
-        run: |
-          PEM_KEY=$(aws secretsmanager get-secret-value --secret-id EC2_SSH_KEY --query SecretString --output text)
-          echo "$PEM_KEY" > ec2-ssh-key.pem
-          chmod 600 ec2-ssh-key.pem
-
       - name: SSH into EC2 and deploy
         run: |
+          # Extract PEM key from GitHub Secrets
+          echo "${{ secrets.EC2_SSH_KEY }}" > ec2-ssh-key.pem
+          chmod 600 ec2-ssh-key.pem
+
           # SSH into EC2 instance
           ssh -i ec2-ssh-key.pem ec2-user@3.87.237.23 << 'EOF'
             # Download the updated Docker Compose file from GitHub only if changes
