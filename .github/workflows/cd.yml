@@ -28,7 +28,7 @@ jobs:
           chmod 600 ec2-ssh-key.pem
 
           # SSH into EC2 instance
-          ssh -o StrictHostKeyChecking=no ec2-ssh-key.pem ec2-user@3.87.237.23 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ec2-ssh-key.pem ec2-user@3.87.237.23 << 'EOF'
             # Download the updated Docker Compose file from GitHub only if changes
             wget --quiet -N https://raw.githubusercontent.com/Dandiggas/DansBlog/main/docker-compose.yml
 
