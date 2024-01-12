@@ -5,7 +5,7 @@ async function run() {
     const version = process.env.INPUT_VERSION;
 
     // Read Docker Compose file
-    let dockerComposePath = './docker-compose-prod.yml';
+    let dockerComposePath = './docker-compose.yml';
     let dockerComposeContent = fs.readFileSync(dockerComposePath, 'utf8');
 
     // Replace image tag with the latest version
