@@ -1,0 +1,41 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Update with your region
+
+      - name: Fetch EC2 SSH key from AWS Secret Manager
+        run: |
+          PEM_KEY=$(aws secretsmanager get-secret-value --secret-id EC2_SSH_KEY --query SecretString --output text)
+          echo "$PEM_KEY" > ec2-ssh-key.pem
+          chmod 600 ec2-ssh-key.pem
+
+      - name: SSH into EC2 and deploy
+        run: |
+          # SSH into EC2 instance
+          ssh -i ec2-ssh-key.pem ec2-user@3.87.237.23 << EOF
+            cd /path/to/your/app
+
+            # Download the updated Docker Compose file from GitHub
+            wget https://raw.githubusercontent.com/Dandiggas/DansBlog/main/docker-compose.yml -O docker-compose.yml
+
+            # Docker Compose down and up
+            docker-compose down
+            docker-compose up -d
+          EOF
