@@ -1,48 +1,47 @@
 name: Deploy to ECR
 
 on:
+ 
   push:
-    branches:
-      - main
-    paths-ignore:
-      - '/dansblog/file.txt'
+    branches: [ main ]
 
 jobs:
+  
   build:
+    
     name: Build Image
     runs-on: ubuntu-latest
 
+   
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
 
-      - name: Login to Amazon ECR Public
-        id: login-ecr-public
-        uses: aws-actions/amazon-ecr-login@v2
-        with:
-          registry-type: public
+    - name: Login to Amazon ECR Public
+      id: login-ecr-public
+      uses: aws-actions/amazon-ecr-login@v2
+      with:
+        registry-type: public
+   
+    - name: Automatic Tagging of Releases
+      id: increment-git-tag
+      run: |
+        bash ./build/git_update.sh -v patch
 
-      - name: Automatic Tagging of Releases
-        id: increment-git-tag
-        run: |
-          bash ./build/git_update.sh -v patch
-
-          # Write the new tag to a file in the root of the repository
-          echo $NEW_TAG > /dansblog/file.txt
-
-      - name: Build, tag, and push image to Amazon ECR
-        env:
-          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-          REGISTRY_ALIAS: diggas
-          REPOSITORY: blog
-          IMAGE_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
-        run: | 
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG -f ./Dockerfile .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+    - name: Build, tag, and push image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+        REGISTRY_ALIAS: diggas
+        REPOSITORY: blog
+        IMAGE_TAG: ${{ steps.increment-git-tag.outputs.git-tag }}
+      run: | 
+        docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG -f ./Dockerfile .
+        docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
