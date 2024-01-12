@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Update with your region
+          aws-region: us-east-1  
 
       - name: Fetch EC2 SSH key from AWS Secret Manager
         run: |
@@ -29,11 +29,11 @@ jobs:
       - name: SSH into EC2 and deploy
         run: |
           # SSH into EC2 instance
-          ssh -i ec2-ssh-key.pem ec2-user@3.87.237.23 << EOF
-            cd /path/to/your/app
+          ssh -i ec2-ssh-key.pem ec2-user@3.87.237.23 << 'EOF'
+            # Download the updated Docker Compose file from GitHub only if changes
+            wget --quiet -N https://raw.githubusercontent.com/Dandiggas/DansBlog/main/docker-compose.yml
 
-            # Download the updated Docker Compose file from GitHub
-            wget https://raw.githubusercontent.com/Dandiggas/DansBlog/main/docker-compose.yml -O docker-compose.yml
+            # Compare checksum or modification timestamp if needed
 
             # Docker Compose down and up
             docker-compose down
