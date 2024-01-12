@@ -1,0 +1,9 @@
+name: 'Template Docker Compose'
+description: 'Replace image tag in Docker Compose file with the latest version number'
+inputs:
+  version:
+    description: 'The latest version number'
+    required: true
+runs:
+  using: 'node12'
+  main: 'main.js'
