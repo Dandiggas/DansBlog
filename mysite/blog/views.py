@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from .forms import EmailPostForm
+
 
 def post_list(request):
     posts = Post.published.all()
