@@ -4,6 +4,11 @@
 
 This documentation provides an overview of the deployment process for a Django blog application using an SQL database. The application is containerized using Docker and orchestrated for deployment on AWS infrastructure with automation handled through GitHub Actions.
 
+
+http://blog.dandev.cloud/blog/
+
+
+
 ![Deployment Workflow](./deployment-workflow.png)
 
 *Deployment workflow diagram*
